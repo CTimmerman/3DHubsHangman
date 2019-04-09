@@ -19,7 +19,7 @@ extendability.
 Good luck!"""
 
 import random
-from database import Database
+from lib.database import Database
 # python -m pip install flask
 from flask import Flask, escape, request, session, g  # g = app global
 
@@ -83,14 +83,14 @@ def board(session):
 		'\n' + (' '.join(shown))
 
 def init_game(session):
-	word = random.choice(open('words.txt', 'r').read().splitlines())  # splitlines() because readlines() leaves the newlines on.
+	word = random.choice(open('data/words.txt', 'r').read().splitlines())  # splitlines() because readlines() leaves the newlines on.
 	session['shown'] = ['_'] * len(word)
 	session['word'] = word
 	session['fails'] = []
 	session['name'] = 'Anon'
-	session['template'] = open("index.html", 'r').read()
-	session['try_again'] = open("try_again.html", 'r').read()
-	session['guess'] = open("guess.html", 'r').read()
+	session['template'] = open("templates/index.html", 'r').read()
+	session['try_again'] = open("templates/try_again.html", 'r').read()
+	session['guess'] = open("templates/guess.html", 'r').read()
 	session['done'] = False
 
 app = Flask(__name__)
@@ -98,7 +98,7 @@ app.secret_key = b'34u89nqg45hg29q5n3hg5n9l459olqnm4q5oieorahadr'
 #Done for every request!
 @app.before_request
 def before_request():
-	g.db = Database('scores.sqlite')
+	g.db = Database('data/scores.sqlite')
 
 @app.teardown_appcontext
 def teardown_db(context):
