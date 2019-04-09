@@ -21,7 +21,7 @@ Good luck!"""
 import random
 from lib.database import Database
 # python -m pip install flask
-from flask import Flask, escape, request, session, g  # g = app global
+from flask import Flask, escape, g, jsonify, request, session  # g = app global
 
 man = [
 r'''
@@ -128,6 +128,10 @@ def index():
 	print(content)
 	return content
 
+@app.route('/scores', methods=['GET'])
+def scores():
+	return jsonify(g.db.get_scores())
+
 def guess(session, letter, db):
 	print("guess", session, letter)
 	found = False
@@ -146,13 +150,13 @@ def guess(session, letter, db):
 			message = "Game over."
 	elif not '_' in shown:
 		session['done'] = True
-		score = len(word)
-		message = "\nCongratulations! Your score is %s." % score
+		score = len(word) - len(session['fails'])
 		name = session['name']
 		id = db.set_score(score, name)
-		scores = db.get_scores()
-		for score, name in scores:
-			message += '\n%s %s' % (score, name)
+		message = "\nCongratulations! Your score is %s.\n\nTop scores:\n" % score
+		scores = db.get_scores(5)
+		for rank, (score, name, timestamp) in enumerate(scores):
+			message += '\n%02s %03s  %s' % (rank+1, score, name)
 	return board(session) + '\n' + message
 	
 if __name__ == "__main__":
