@@ -19,6 +19,7 @@ class Database:
 	def set_score(self, score, name="Anon"):
 		cur = self.con.cursor()
 		cur.execute("insert into scores(score, name) values (?, ?)", (score, name))
+		self.con.commit()
 		return cur.lastrowid
 
 	def get_scores(self):
