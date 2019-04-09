@@ -1,6 +1,0 @@
-3dhubs
-marvin
-print
-filament
-order
-layer
