@@ -95,7 +95,8 @@ def init_game(session):
 
 app = Flask(__name__)
 app.secret_key = b'34u89nqg45hg29q5n3hg5n9l459olqnm4q5oieorahadr'
-#Done for every request!
+
+### Done for every request!
 @app.before_request
 def before_request():
 	g.db = Database('data/scores.sqlite')
@@ -104,6 +105,7 @@ def before_request():
 def teardown_db(context):
 	db = g.pop('db', None)
 	if db is not None: db.close()
+###
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
